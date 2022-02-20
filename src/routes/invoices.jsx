@@ -1,14 +1,33 @@
 import React from 'react';
 
-import { Outlet, Link, NavLink } from 'react-router-dom';
+import { Outlet, NavLink, useSearchParams } from 'react-router-dom';
 import { getInvoices } from '../data';
 
 export default function Invoices() {
   let invoices = getInvoices();
+  let [searchParams, setSearchParams] = useSearchParams();
+
   return (
     <div style={{ display: 'flex' }}>
-      <nav styles={{ borderRight: 'solid 1px', padding: '1rem' }}>
-        {invoices.map(invoice => (
+      <nav style={{ borderRight: 'solid 1px', padding: '1rem' }}>
+        <input
+          value={searchParams.get('filter') || ''}
+          onChange={e => {
+            let filter = e.target.value;
+            if (filter) {
+              setSearchParams({ filter });
+            } else {
+              setSearchParams({});
+            }
+          }}
+        />
+        {invoices.filter(invoice => {
+          let filter = searchParams.get('filter');
+          if (!filter) return true;
+          let name = invoice.name.toLowerCase();
+          return name.startsWith(filter.toLowerCase());
+        })
+        .map(invoice => (
           <NavLink
             style={({ isActive }) => {
               return {
