@@ -7,17 +7,35 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Expenses from './routes/expenses';
 import Invoices from './routes/invoices';
+import Invoice from './routes/invoice';
 
 ReactDOM.render(
-  <React.StrictMode>
-    <BrowserRouter>
-      <Routes>
-        <Route path='/' element={<App />} />
+  <BrowserRouter>
+    <Routes>
+      <Route path='/' element={<App />}>
         <Route path='expenses' element={<Expenses />} />
-        <Route path='invoices' element={<Invoices />} />
-      </Routes>
-    </BrowserRouter>
-  </React.StrictMode>,
+        <Route path='invoices' element={<Invoices />}>
+          <Route
+            index
+            element={
+              <div style={{ padding: '1rem' }}>
+                <p>Select an invoice</p>
+              </div>
+            }
+          />
+          <Route path=':invoiceId' element={<Invoice />} />
+        </Route>
+        <Route
+          path='*'
+          element={
+            <div style={{ padding: '1rem' }}>
+              <p>Nothing Here</p>
+            </div>
+          }
+        />
+      </Route>
+    </Routes>
+  </BrowserRouter>,
   document.getElementById('root')
 );
 
